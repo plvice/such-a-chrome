@@ -1,2 +1,2 @@
 # such-chrome
-My first Google Chrome extension. Very proud of that.
+My very first Google Chrome extension. Very proud of that.
