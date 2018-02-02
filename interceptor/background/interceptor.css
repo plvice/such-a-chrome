@@ -1,0 +1,17 @@
+button {
+    outline: 4px solid green !important;
+}
+
+.be5dd21e-c7e4-4633-bb8e-e022bc84d0e7 {
+    background: #fff;
+    bottom: 0;
+    color: #000;
+    display: block;
+    font-size: 16px;
+    height: 300px;
+    left: 0;
+    overflow: auto;
+    position: fixed;
+    width: 300px;
+    z-index: 999999999;
+}
