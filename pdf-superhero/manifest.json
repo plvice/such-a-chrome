@@ -1,0 +1,43 @@
+{
+    "manifest_version": 2,
+    "name": "pdf-superhero",
+    "version": "1.0.0",
+    "description": "File handler for PDF format",
+    "icons": {
+      "128": "icon128.png",
+      "48": "icon48.png",
+      "16": "icon16.png"
+    },
+    "permissions": [
+      "webRequest", 
+      "webRequestBlocking",
+      "<all_urls>",
+      "tabs",
+      "webNavigation",
+      "storage"
+    ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "file_browser_handlers": [{
+      "id": "open-as-pdf",
+      "default_title": "Open with PDF Superhero",
+      "file_filters": [
+        "filesystem:*.pdf"
+      ]
+    }],
+    "background": {
+      "page": "pdfHandler.html"
+    },
+    "incognito": "split",
+    "web_accessible_resources": [
+      "http:/*",
+      "https:/*",
+      "ftp:/*",
+      "file:/*",
+      "chrome-extension:/*",
+      "blob:*",
+      "data:*",
+      "filesystem:/*",
+      "drive:*"
+    ]
+  }
+  
