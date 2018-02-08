@@ -1,4 +1,8 @@
 
+var requestData = {
+
+};
+
 function getHeaderFromHeaders(headers, headerName) {
   for (var i = 0; i < headers.length; ++i) {
     var header = headers[i];
@@ -29,39 +33,43 @@ function isPdfFile(details) {
 }
 
 chrome.webRequest.onCompleted.addListener(function (details) {
-  if (details.method === 'GET') {
-    if (!isPdfFile(details)) {
-      console.log('not pdf!');
-      return;
-    } else {
-      console.log('pdf! downloading...');
-      console.log(details);
+  // console.log(details);
+  // if (!isPdfFile(details)) {
+    // console.log('not pdf!');
+    // return;
+  // } else {
+    // console.log('onCompleted');
+    // console.log('pdf! downloading...');
+    // console.log(details);
+  // }
 
-      xhrGET(details.url, function(data){
-        console.log('file downloaded');
-        console.log(data.substr(0,100));
-      }, function() {
-        console.log('nie udało się go pobrać :-(');
+  if(details.initiator.indexOf('chrome') === -1) {
+  //   if (details.method === 'GET') {
+  //     console.log('using GET');
+  //     xhrGET(details.url, function (data) {
+  //       console.log('data:');
+  //       console.log(data.substr(0, 100));
+  //     }, function () {
+  //       console.error('pdf download failure');
+  //     })
+  //   }
+
+    var dataToPost = requestData[details.requestId];
+
+    if (dataToPost && details.method === 'POST') {
+      console.log('using POST');
+      xhrPOST(dataToPost, details.url, function (data) {
+        console.log('data:');
+        console.log(data.substr(0, 100));
+      }, function () {
+        console.error('pdf download failure');
       })
+    } else {
+      console.log('Nie znaleziono danych dla podanego requestId');
     }
   }
 
-  // if (details.method === 'POST') {
-  //   if (!isPdfFile(details)) {
-  //     console.log('to nie pdf. sorki');
-  //     return;
-  //   } else {
-  //     console.log('to pdf! rozpoczynam pobieranie...');
-  //     console.log(details);
 
-  //     // xhrGET(details.url, function(data){
-  //     //   console.log('pobrałem plik. Dla wiarygodności pozwól mi pokazać pierwsze 100 znaków :-0')
-  //     //   console.log(data.substr(0,100));
-  //     // }, function() {
-  //     //   console.log('nie udało się go pobrać :-(');
-  //     // })
-  //   }
-  // }
 },
   {
     urls: [
@@ -69,9 +77,87 @@ chrome.webRequest.onCompleted.addListener(function (details) {
       'file://*/*.pdf',
       'file://*/*.PDF'
     ],
-    types: ['main_frame', 'sub_frame']
   },
   ['responseHeaders']);
+
+// chrome.webRequest.onResponseStarted.addListener(function (details) {
+//   console.log('onResponseStarted');
+//   console.log(details);
+// },
+//   {
+//     urls: ['<all_urls>'],
+//   },
+//   ['responseHeaders']);
+
+// chrome.webRequest.onHeadersReceived.addListener(function (details) {
+//   console.log('onHeadersReceived');
+//   console.log(details);
+// },
+//   {
+//     urls: ['<all_urls>'],
+//   },
+//   ['blocking', 'responseHeaders']);
+
+
+// chrome.webRequest.onBeforeSendHeaders.addListener(function(details){
+//   console.log('onBeforeSendHeaders');
+//   console.log(details);
+// },
+// {
+//   urls: ['<all_urls>']
+// },
+// ['requestHeaders','blocking']);
+
+// chrome.webRequest.onSendHeaders.addListener(function(details){
+//   console.log('onSendHeaders');
+//   console.log(details);
+// },
+// {
+//   urls: ['<all_urls>']
+// },
+// ['requestHeaders']);
+
+chrome.webRequest.onBeforeRequest.addListener(function(details) {
+  console.log('onBeforeRequest');
+  console.log(details);
+  requestData[details.requestId.toString()] = details.requestBody;
+},
+{
+  urls: ['<all_urls>']
+},
+['requestBody', 'blocking']);
+
+
+function xhrPOST(data, url, onSuccess, onFailure) {
+  onSuccess = onSuccess || function _onSuccess(data) { };
+  onFailure = onFailure || function _onFailure() { };
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', url);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+
+  // if (xhr.overrideMimeType) {
+  //   xhr.overrideMimeType('text/plain; charset=utf-8');
+  // }
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4) {
+      if (xhr.status == 200 || xhr.status === 0) {
+        onSuccess(xhr.responseText);
+      } else {
+        onFailure();
+      }
+    }
+  };
+  xhr.onerror = onFailure;
+  xhr.ontimeout = onFailure;
+  try {
+    xhr.send(data);
+  } catch (e) {
+    onFailure();
+  }
+}
+
 
 function xhrGET(url, onSuccess, onFailure) {
   onSuccess = onSuccess || function _onSuccess(data) { };
