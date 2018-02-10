@@ -1,0 +1,16 @@
+.heropdf {
+    background: #fff;
+    border-radius: 10px;
+    bottom: 10px;
+    box-shadow: 0px 0px 30px #999;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    height: 80px;
+    left: 10px;
+    overflow: auto;
+    padding: 20px;
+    position: fixed;
+    width: 300px;
+    z-index: 99999;
+}
