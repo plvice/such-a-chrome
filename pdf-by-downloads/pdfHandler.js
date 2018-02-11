@@ -10,20 +10,42 @@ chrome.downloads.onCreated.addListener(response => {
       time: persistenceTime
     })
 
-    chrome.tabs.getAllInWindow(tabs => {
-      tabs.forEach(tab => {
-        chrome.tabs.sendMessage(tab.id, files, function (response) {
-          console.log(response);
-        })
-      })
-    })
+    sendFilesToView();
   }
 })
 
-chrome.downloads.onChanged.addListener(response => {
-  console.log(response);
-});
+//refresh persistence time
+setInterval(() => {
+  if (files.length > 0) {
+    files.forEach((file, index) => {
+      file.time = file.time - 1;
+
+      if (file.time <= 0) {
+        chrome.downloads.removeFile(file.id, function (response) {
+          console.log(`File with ID ${response.id} removed.`)
+        });
+        files.splice(index, 1);
+      }
+    })
+  }
+
+  sendFilesToView();
+}, 1000)
+
+function sendFilesToView() {
+  chrome.tabs.getAllInWindow(tabs => {
+    tabs.forEach(tab => {
+      if (tab.id >= 0) {
+        chrome.tabs.sendMessage(tab.id, files);
+      }
+    })
+  })
+}
 
 function isPDF(mime) {
   return mime.indexOf('pdf') !== -1;
 }
+
+// chrome.downloads.onChanged.addListener(response => {
+//   console.log(response);
+// });

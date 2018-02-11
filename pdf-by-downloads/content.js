@@ -1,9 +1,10 @@
-
+const guid = 'c884efbe-1c7d-408c-ad42-85efa56cb78f';
 const container = document.createElement('div');
-container.classList.add('heropdf');
+const persistence = 120;
+
+container.classList.add(`${guid}-container`);
 document.body.appendChild(container);
 
-const guid = 'c884efbe-1c7d-408c-ad42-85efa56cb78f';
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request) {
@@ -11,13 +12,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
-function update(data) {
-    data.forEach(file => {
+function update(files) {
+    let html = '';
+    files.forEach(file => {
         if (file.id) {
-            let element = document.querySelector(`[data-id="${guid}-${file.id}"]`);
-            if (!element) {
-                container.innerHTML += `<p class="${guid}" data-id="${guid}-${file.id}">${file.id}</p>`;
-            }
+            html += 
+            `<div class="${guid}-file" data-id="${guid}-${file.id}">
+                <div class="${guid}-filename">${file.id}</div>
+                <div class="${guid}-filepersistence">
+                    <span class="${guid}-sidebar" style="width: ${file.time/persistence*100}%;">
+                        ${file.time}
+                    </span>
+                </div>
+            </div>`;
         }
     })
+    container.innerHTML = html;
 }

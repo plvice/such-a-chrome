@@ -1,4 +1,4 @@
-.heropdf {
+.c884efbe-1c7d-408c-ad42-85efa56cb78f-container {
     background: #fff;
     border-radius: 10px;
     bottom: 10px;
@@ -6,11 +6,45 @@
     color: #333;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 14px;
-    height: 80px;
     left: 10px;
+    min-height: 0;
+    max-height: 400px;
     overflow: auto;
-    padding: 20px;
+    padding: 0;
     position: fixed;
-    width: 300px;
+    transition: all 0.3s ease-out;
+    width: 400px;
     z-index: 99999;
+}
+
+.c884efbe-1c7d-408c-ad42-85efa56cb78f-file {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 10px 20px;
+}
+
+.c884efbe-1c7d-408c-ad42-85efa56cb78f-file:first-child {
+    padding-top: 20px;
+}
+
+.c884efbe-1c7d-408c-ad42-85efa56cb78f-file:last-child {
+    padding-bottom: 20px;
+}
+
+.c884efbe-1c7d-408c-ad42-85efa56cb78f-filename {
+    width: 60%;
+}
+
+.c884efbe-1c7d-408c-ad42-85efa56cb78f-filepersistence {
+    width: 40%;
+}
+
+.c884efbe-1c7d-408c-ad42-85efa56cb78f-sidebar {
+    background: green;
+    border-radius: 3px;
+    color: #fff;
+    display: block;
+    padding: 3px 4px;
+    width: 100%;
 }
